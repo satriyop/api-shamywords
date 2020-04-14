@@ -23,6 +23,26 @@ type WordSha struct {
 	Sha     string `json:"sha"`
 }
 
+// DbShaResult is dummy database record
+type DbShaResult struct {
+	ID      string `json:"id"`
+	Created string `json:"created"`
+	Sha     string `json:"sha"`
+}
+
+var dbDummy = []DbShaResult{
+	{
+		ID:      "1",
+		Created: time.Now().String(),
+		Sha:     "sh4r3sult-1",
+	},
+	{
+		ID:      "2",
+		Created: time.Now().String(),
+		Sha:     "sha4r3sult-2",
+	},
+}
+
 func main() {
 	r := mux.NewRouter()
 
@@ -35,8 +55,16 @@ func shaHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	switch r.Method {
 	case "GET":
+		jsonData, err := json.Marshal(&dbDummy)
+		if err != nil {
+			log.Println(err)
+		}
+		// send status to front end
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"message": "hello GET"}`))
+		w.Write((jsonData))
+		// w.WriteHeader(http.StatusOK)
+		// w.Write([]byte(`{"message": "hello GET"}`))
 	case "POST":
 		// set Header for CORS
 		w.Header().Set("Access-Control-Allow-Origin", "*")
