@@ -12,9 +12,10 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// Word from POST request
 type Word struct {
-	ID      string `json:"id"`
-	Promise string `json:"promise"`
+	ID   string `json:"id"`
+	Text string `json:"text"`
 }
 
 // WordSha To be Json
@@ -35,11 +36,6 @@ var dbDummy = []DbShaResult{
 		ID:      "1",
 		Created: time.Now().String(),
 		Sha:     "sh4r3sult-1",
-	},
-	{
-		ID:      "2",
-		Created: time.Now().String(),
-		Sha:     "sha4r3sult-2",
 	},
 }
 
@@ -84,8 +80,8 @@ func shaHandler(w http.ResponseWriter, r *http.Request) {
 		//storeSha
 		var wsha WordSha
 		storeSha(r, &wsha)
-		fmt.Printf("%+v", wsha)
-		// fmt.Println(&wsha)
+		fmt.Printf("%+v\n", wsha)
+		fmt.Println("=========================================================================")
 		jsonData, err := json.Marshal(&wsha)
 		if err != nil {
 			log.Println(err)
@@ -101,7 +97,7 @@ func shaHandler(w http.ResponseWriter, r *http.Request) {
 
 func shaSum(word *Word) string {
 	// Calculate the sha of the word
-	sum := sha256.Sum256([]byte(word.Promise))
+	sum := sha256.Sum256([]byte(word.Text))
 	// convert to []byte
 	s := sum[:]
 
